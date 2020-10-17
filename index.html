@@ -1,0 +1,113 @@
+<head>
+    <title>Cloudflare TV</title>
+    <style>
+        table {
+        border-collapse: collapse;
+        }
+
+        table, th, td {
+        border: 1px solid black;
+        }
+
+        th, td {
+        padding: 15px;
+        text-align: left;
+        }
+    </style>
+    <script src="https://unpkg.com/lunr@2.3.9/lunr.min.js"></script>
+</head>
+<body>
+    <p>Cloudflare TV</p>
+    <!-- Downloaded lunr.js from https://unpkg.com/lunr@2.3.9/lunr.min.js -->
+    <form class="form-inline justify-content-center" id="site_search">
+        <div class="form-row align-items-center" style="padding-bottom:20px;">
+            <div class="col-auto">
+                <label class="sr-only" for="q">Search</label>
+                <div class="input-group">
+                    <!-- <input autocomplete="off" autofocus="autofocus"  class="form-control" id="q" name="q" placeholder="Search terms" type="text" oninput onpaste="doSearch()"/> -->
+                    <input autocomplete="off" autofocus="autofocus"  class="form-control" id="q" name="q" placeholder="Search terms" type="text"/>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn" style="background-color:#1d8286;color:white;font-weight:bold;">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row clearfix">
+        <div class="logo-container" id="search_results" style="overflow-x:auto;"></div>
+    </div>
+    <script>
+        const CF_EVENT = "https://cloudflare.tv/event/EVENTID";
+        const CF_THUMB = "https://videodelivery.net/VIDEOID/thumbnails/thumbnail.jpg?time=35s&width=160";
+        window.data = [false];
+        lunr.tokenizer.seperator = /[\s\-_\.]+/
+        var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+        xobj.open('GET', 'cftv.json');
+        xobj.onload = () => {
+            window.data = JSON.parse(xobj.responseText);
+            window.idx = lunr(function () {
+                this.field('id');
+                this.field('videoId');
+                this.field('title', { boost: 10 });
+                this.field('tags', { boost: 2 });
+                this.field('description');
+                window.data.forEach((doc, i) => {
+                    doc['eventId'] = doc['id'];
+                    doc['id'] = i;
+                    this.add(doc);
+                }, this);
+		    });
+        }
+        xobj.send(null);
+
+        var doSearch = function(query) {
+            if (!query || query.length < 3) {
+                return;
+            }
+            console.log("searching for " + query);
+            var results = window.idx.search(query);
+            displaySearchResults(query, results);
+            return false;
+        };
+
+        var submitSearch = (e) => {
+            e.preventDefault();
+            doSearch(document.getElementById("q").value);
+		    return false;
+        }
+
+        function displaySearchResults(query, results) {
+            var search_results = document.getElementById("search_results");
+            search_results.innerHTML = "";
+            if (results.length) {
+                // Add table of search results
+                var tableStr = "<table><tr><th>Title</th><th>Thumbnail</th><th>Aired</th><th>Description</th></tr>";
+                results.forEach( (r) => {
+                    let item = window.data[r.ref];
+                    if (item.eventId) {
+                        tableStr += buildResultNode(item);
+                    }
+                });
+                tableStr += "</table>";
+                search_results.insertAdjacentHTML( 'beforeend', tableStr );
+            }
+        }
+
+        function buildResultNode(item) {
+            return `<tr>
+                        <td><b><a href="${CF_EVENT.replace("EVENTID", item.eventId)}">${item.title}</b></td>
+                        <td><img src="${CF_THUMB.replace("VIDEOID", item.videoId)}" alt="${item.title}"/></td>
+                        <td>${item.start}</td>
+                        <td>${item.description.replaceAll(/__(.+?)__/g, "<b>$1</b>").replaceAll(/\*(.+?)\*/g, "<i>$1</i>")}</td>
+                    </tr>`;
+        }
+
+        var form = document.getElementById("site_search");
+        form.addEventListener("submit", submitSearch, true);
+        var qbox = document.getElementById("q");
+        qbox.addEventListener("input", submitSearch, true);
+
+    </script>
+</body>
