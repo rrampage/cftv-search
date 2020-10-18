@@ -83,7 +83,7 @@
             search_results.innerHTML = "";
             if (results.length) {
                 // Add table of search results
-                var tableStr = "<table><tr><th>Title</th><th>Thumbnail</th><th>Aired</th><th>Description</th></tr>";
+                var tableStr = "<table><tr><th>Title</th><th>Thumbnail</th><th>Aired</th><th>Description</th><th>Duplicates</th></tr>";
                 results.forEach( (r) => {
                     let item = window.data[r.ref];
                     if (item.eventId) {
@@ -101,6 +101,7 @@
                         <td><img src="${CF_THUMB.replace("VIDEOID", item.videoId)}" alt="${item.title}"/></td>
                         <td>${item.start}</td>
                         <td>${item.description.replaceAll(/__(.+?)__/g, "<b>$1</b>").replaceAll(/\*(.+?)\*/g, "<i>$1</i>")}</td>
+                        <td>${item.later ? "<ol>" + item.later.map((i) => `<li><a href="${CF_EVENT.replace("EVENTID", i)}">Link</li>`).join(" ") + "</ol>": ""}</td>
                     </tr>`;
         }
 
