@@ -5,7 +5,7 @@ Currently, searching for previous videos on Cloudflare.tv is difficult. This pro
 The site's code is ~~copied~~ heavily adapted from [VectorLogoZone](https://github.com/VectorLogoZone/vectorlogozone/blob/gh-pages/www/index.html) but with JQuery dependency removed.
 
 #### TODO:
-- Work correctly on mobile devices
+- ~~Work correctly on mobile devices~~ (Fixed by using replace instead of replaceAll for formatting markdown)
 - Make responsive
 - Improve aesthetic (slightly)
 - ~~Reduce static JSON size~~
