@@ -100,7 +100,7 @@
                         <td><b><a href="${CF_EVENT.replace("EVENTID", item.eventId)}">${item.title}</b></td>
                         <td><img src="${CF_THUMB.replace("VIDEOID", item.videoId)}" alt="${item.title}"/></td>
                         <td>${item.start}</td>
-                        <td>${item.description.replaceAll(/__(.+?)__/g, "<b>$1</b>").replaceAll(/\*(.+?)\*/g, "<i>$1</i>")}</td>
+                        <td>${item.description.replace(/__(.+?)__/g, "<b>$1</b>").replace(/\*(.+?)\*/g, "<i>$1</i>")}</td>
                         <td>${item.later ? "<ol>" + item.later.map((i) => `<li><a href="${CF_EVENT.replace("EVENTID", i)}">Link</li>`).join(" ") + "</ol>": ""}</td>
                     </tr>`;
         }
