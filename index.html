@@ -1,11 +1,11 @@
 <head>
     <title>Cloudflare TV</title>
     <style>
-        body{margin:40px auto;max-width:750px;line-height:1.6;font-size:20px;color:#444;padding:0 10px}
+        body{margin:40px auto;max-width:800px;line-height:1.6;font-size:20px;color:#444;padding:0 10px}
         h1,h2,h3{line-height:1.3}
-        table{border-collapse: collapse;}
+        table{border-collapse: collapse;width: 100%;}
         table,th,td{border: 1px solid black;}
-        th,td{padding: 15px;text-align: left;}
+        th,td{padding: 8px;text-align: left;}
     </style>
     <script src="https://unpkg.com/lunr@2.3.9/lunr.min.js"></script>
 </head>
@@ -76,7 +76,7 @@
             search_results.innerHTML = "";
             if (results.length) {
                 // Add table of search results
-                var tableStr = "<table><tr><th>Title</th><th>Thumbnail</th><th>Aired</th><th>Description</th><th>Duplicates</th></tr>";
+                var tableStr = "<table><tr><th>Title</th><th>Thumbnail</th><th>Description</th><th>Duplicates</th></tr>";
                 results.forEach( (r) => {
                     let item = window.data[r.ref];
                     if (item.eventId) {
@@ -90,9 +90,8 @@
 
         function buildResultNode(item) {
             return `<tr>
-                        <td><b><a href="${CF_EVENT.replace("EVENTID", item.eventId)}">${item.title}</b></td>
+                        <td><b><a href="${CF_EVENT.replace("EVENTID", item.eventId)}">${item.title}</a></b><br><br><u>Aired on:</u><br> ${item.start}</td>
                         <td><img src="${CF_THUMB.replace("VIDEOID", item.videoId)}" alt="${item.title}"/></td>
-                        <td>${item.start}</td>
                         <td>${item.description.replace(/__(.+?)__/g, "<b>$1</b>").replace(/\*(.+?)\*/g, "<i>$1</i>")}</td>
                         <td>${item.later ? "<ol>" + item.later.map((i) => `<li><a href="${CF_EVENT.replace("EVENTID", i)}">Link</li>`).join(" ") + "</ol>": ""}</td>
                     </tr>`;
