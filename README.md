@@ -6,6 +6,6 @@ The site's code is ~~copied~~ heavily adapted from [VectorLogoZone](https://gith
 
 #### TODO:
 - ~~Work correctly on mobile devices~~ (Fixed by using replace instead of replaceAll for formatting markdown)
-- Make responsive
-- Improve aesthetic (slightly)
-- ~~Reduce static JSON size~~
+- ~~Make responsive~~ (No longer horribly undersized on mobile)
+- Improve aesthetic (slightly) -> For most purposes it is ok. Can probably add a background color??
+- ~~Reduce static JSON size~~ -> From 4MB to 330KB with deduplication
